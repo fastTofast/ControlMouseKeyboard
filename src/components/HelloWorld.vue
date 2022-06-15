@@ -15,7 +15,6 @@ function move(e: Event) {
 </script>
 
 <template>
-  <!-- <h1>{{ msg }}</h1> -->
   <div class="content">
     <div style="flex:1">
       <span>X:</span>
