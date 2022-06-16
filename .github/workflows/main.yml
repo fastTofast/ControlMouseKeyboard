@@ -24,8 +24,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: app-v${{ env.PACKAGE_VERSION }},
+          name: "Desktop app v${{ env.PACKAGE_VERSION }}"
+          body: "See the assets to download this version and install."
+          release_name: Release ${{ steps.create-release.outputs.id }}
           draft: false
           prerelease: false
   
