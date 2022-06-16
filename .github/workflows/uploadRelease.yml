@@ -30,7 +30,6 @@ jobs:
               draft: true,
               prerelease: false
             })
-            
             return data.id
 
   build-tauri:
