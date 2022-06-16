@@ -1,6 +1,6 @@
 name: "test-on-pr"
 
-on: pull_request
+on: [push, pull_request]
 
 jobs:
   create-release:
@@ -9,7 +9,7 @@ jobs:
       RELEASE_ID: ${{ steps.create-release.outputs.result }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@main
       - name: setup node
         uses: actions/setup-node@v1
         with:
@@ -42,7 +42,7 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@main
     - name: setup node
       uses: actions/setup-node@v1
       with:
