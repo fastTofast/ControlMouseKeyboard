@@ -24,10 +24,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: app-v${{ env.PACKAGE_VERSION }},
+          tag_name: app-v${{ env.PACKAGE_VERSION }}
           name: "Desktop app v${{ env.PACKAGE_VERSION }}"
           body: "See the assets to download this version and install."
-          release_name: Release ${{ steps.create-release.outputs.id }}
+          release_name: Release ${{ env.PACKAGE_VERSION }}
           draft: false
           prerelease: false
   
@@ -41,7 +41,7 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v2
-    - name: setup node
+    - name: setup node ${{ needs.create-release.outputs.RELEASE_ID }}
       uses: actions/setup-node@v1
       with:
         node-version: 16
@@ -49,7 +49,6 @@ jobs:
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
-        testField: ${{ needs.create-release.outputs.RELEASE_ID }}
     - name: install dependencies (ubuntu only)
       if: matrix.platform == 'ubuntu-latest'
       run: |
