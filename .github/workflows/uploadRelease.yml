@@ -30,7 +30,7 @@ jobs:
               draft: true,
               prerelease: false
             })
-            return data.id
+            return 123
 
   build-tauri:
     needs: create-release
