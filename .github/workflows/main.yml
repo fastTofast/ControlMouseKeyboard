@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - 'release*'
+    paths:
+    - '/package.json'
 
 jobs:
   create-release:
@@ -25,7 +27,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: app-v${{ env.PACKAGE_VERSION }}
-          name: "Desktop app v${{ env.PACKAGE_VERSION }}"
           body: "See the assets to download this version and install."
           release_name: Release ${{ env.PACKAGE_VERSION }}
           draft: false
