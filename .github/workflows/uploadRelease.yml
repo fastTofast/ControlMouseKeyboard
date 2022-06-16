@@ -33,7 +33,7 @@ jobs:
             return data.id
 
   build-tauri:
-    needs: create-release
+    #needs: create-release
     strategy:
       fail-fast: false
       matrix:
