@@ -2,9 +2,9 @@ name: "publish"
 on:
   push:
     branches:
-      - 'release*'
+      - 'release/**'
     paths:
-      - '/package.json'
+      - 'package.json'
 
 jobs:
   create-release:
