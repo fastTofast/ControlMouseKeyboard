@@ -44,6 +44,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 16
+        releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
     - name: install Rust stable
       uses: actions-rs/toolchain@v1
       with:
@@ -58,8 +59,9 @@ jobs:
     - uses: tauri-apps/tauri-action@v0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
       with:
-        tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
-        releaseName: "App v__VERSION__"
+        tagName: app-v${{ env.PACKAGE_VERSION }}
+        releaseName: "Release ${{ env.PACKAGE_VERSION }}"
         releaseBody: "See the assets to download this version and install."
         releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
