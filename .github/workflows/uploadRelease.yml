@@ -3,13 +3,7 @@ name: "test-on-pr"
 on: [push, pull_request]
 
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    outputs:
-      RELEASE_ID: 123
-
   build-tauri:
-    needs: create-release
     strategy:
       fail-fast: false
       matrix:
@@ -37,4 +31,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
+        releaseId: '123123'
