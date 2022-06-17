@@ -63,7 +63,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
       with:
-        tagName: app-v${{ APP_VERDION }}
-        releaseName: "Release ${{ APP_VERDION }}"
+        tagName: app-v${{ APP_VERSION }}
+        releaseName: "Release ${{ APP_VERSION }}"
         releaseBody: "See the assets to download this version and install."
         releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
