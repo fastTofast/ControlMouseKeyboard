@@ -61,7 +61,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tagName: ${{ needs.create-release.outputs.TAG_NAME }}
-        releaseName: "Release ${{ needs.create-release.outputs.TAG_NAME }}"
-        releaseBody: "See the assets to download this version and install." ${{ needs.create-release.outputs.TAG_NAME }} ${{ github.ref_name }}
+        # tagName: ${{ needs.create-release.outputs.TAG_NAME }}
+        # releaseName: "Release ${{ needs.create-release.outputs.TAG_NAME }}"
+        releaseBody: "See the assets to download this version and install. ${{ needs.create-release.outputs.TAG_NAME }} ${{ github.ref_name }}"
         releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
