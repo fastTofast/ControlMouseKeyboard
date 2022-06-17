@@ -20,8 +20,6 @@ jobs:
           node-version: 16
       - name: get version
         run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
-      - name: get ref_name
-        run: echo ${{ github.ref_name }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -44,11 +42,10 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v2
-    - name: setup node ${{ needs.create-release.outputs.RELEASE_ID }}
+    - name: setup node ${{ needs.create-release.outputs.RELEASE_ID }} ${{ github.ref_name }}
       uses: actions/setup-node@v1
       with:
         node-version: 16
-        releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
     - name: install Rust stable
       uses: actions-rs/toolchain@v1
       with:
@@ -66,5 +63,5 @@ jobs:
       with:
         tagName: ${{ needs.create-release.outputs.TAG_NAME }}
         releaseName: "Release ${{ needs.create-release.outputs.TAG_NAME }}"
-        releaseBody: "See the assets to download this version and install."
+        releaseBody: "See the assets to download this version and install." ${{ needs.create-release.outputs.TAG_NAME }} ${{ github.ref_name }}
         releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
