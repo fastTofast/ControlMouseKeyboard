@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       RELEASE_ID: ${{ steps.create-release.outputs.id }}
-      APP_VERSION: ${{ steps.app_ver.outputs.ver }}
+      APP_VERSION: ${{ steps.create-release.outputs.ver }}
     steps:
       - uses: actions/checkout@v2
       - name: setup node
