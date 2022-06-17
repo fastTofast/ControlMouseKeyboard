@@ -1,8 +1,10 @@
 name: "publish"
 on:
   push:
-    paths:
-      - 'package.json'
+    # paths:
+    #   - 'package.json'
+    tags:
+      - 'v*'
 
 jobs:
   create-release:
@@ -27,9 +29,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: app-v${{ env.PACKAGE_VERSION }}
+          tag_name: app-v${{ github.ref }}
           body: "See the assets to download this version and install."
-          release_name: Release ${{ env.PACKAGE_VERSION }}
+          release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
   
@@ -63,7 +65,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tagName: app-v${{ needs.reate-release.outputs.APP_VERSION }}
-        releaseName: "Release ${{ needs.reate-release.outputs.APP_VERSION }}"
+        tagName: app-v${{ github.ref }}
+        releaseName: "Release ${{ github.ref }}"
         releaseBody: "See the assets to download this version and install."
         releaseId: ${{ needs.create-release.outputs.RELEASE_ID }}
