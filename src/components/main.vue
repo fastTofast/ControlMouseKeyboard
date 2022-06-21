@@ -26,7 +26,7 @@ const OpTypeName = {
   DELAY: "延时"
 }
 interface OpItem {
-  type: OpType,
+  optype: OpType,
   count: Number,
   position?: { x: Number, y: Number },
   word?: String
@@ -37,24 +37,31 @@ const form = ref({
   y: 0,
   count: 1,
 })
-function move(e: Event) {
-  invoke('move_mouse', { posStr: JSON.stringify(form.value) })
-  console.log('----------', form.value.x)
-}
-console.log('OpType: ', OpType.CLICKLEFT);
 const list = ref<Array<OpItem>>([
-  { type: OpType.CLICKRIGHT, count: 1, },
-  { type: OpType.CLICKLEFT, count: 1, },
-  { type: OpType.KEYCLICK, count: 1, word: 'a' },
-  { type: OpType.MOVE, count: 1, position: { x: 0, y: 0 } },
-  { type: OpType.MOVERELATE, count: 1, position: { x: 0, y: 0 } },
-  { type: OpType.MOVERELATE, count: 1, position: { x: 0, y: 0 } },
+  // { optype: OpType.CLICKRIGHT, count: 1, word: '', position: { x: 0, y: 0 } },
+  // { optype: OpType.CLICKLEFT, count: 1, word: '', position: { x: 0, y: 0 } },
+  // { optype: OpType.KEYCLICK, count: 1, word: '', position: { x: 0, y: 0 } },
+  // { optype: OpType.MOVE, count: 1, word: '', position: { x: 0, y: 0 } },
+  { optype: OpType.MOVERELATE, count: 1, time: 0, word: '', position: { x: 10, y: 10 } },
+  { optype: OpType.DELAY, count: 1, time: 500, word: '', position: { x: 20, y: 20 } },
+  { optype: OpType.MOVERELATE, count: 1, time: 0, word: '', position: { x: 10, y: 10 } },
+  { optype: OpType.DELAY, count: 1, time: 500, word: '', position: { x: 20, y: 20 } },
+  { optype: OpType.MOVERELATE, count: 1, time: 0, word: '', position: { x: 10, y: 10 } },
+  { optype: OpType.DELAY, count: 1, time: 500, word: '', position: { x: 20, y: 20 } },
+  { optype: OpType.MOVERELATE, count: 1, time: 0, word: '', position: { x: 10, y: 10 } },
+  { optype: OpType.DELAY, count: 1, time: 500, word: '', position: { x: 20, y: 20 } },
+  { optype: OpType.MOVERELATE, count: 1, time: 0, word: '', position: { x: 20, y: 20 } },
 ])
 let addedType = ref(OpType.CLICKRIGHT);
 function addType(e: Event) {
   let config: OpItem = {
-    type: addedType.value,
+    optype: addedType.value,
     count: 0,
+    position: {
+      x: 0, y: 0
+    },
+    word: '',
+    time: 0
   }
   if (addedType.value === OpType.DELAY) {
     config.time = 0
@@ -68,6 +75,9 @@ function addType(e: Event) {
   }
   list.value.push(config)
 }
+function handle(e: Event) {
+  invoke('handle_mouse_keyboard', { posStr: JSON.stringify(list.value) })
+}
 </script>
 
 <template>
@@ -76,14 +86,14 @@ function addType(e: Event) {
       <select v-model="addedType" @change.lazy="addType">
         <option :value="op" v-for="op in OpType">{{ OpTypeName[op as never] }}</option>
       </select>
-      <span @click="move" class="btn">执行</span>
+      <span @click="handle" class="btn">执行</span>
     </div>
     <div class="op-content">
       <Draggable v-model="list" :animation="300" handle=".op-name">
         <template #item="{ element: opItem }">
           <div>
-            <div class="item" v-if="opItem.type === OpType.MOVE || opItem.type === OpType.MOVERELATE">
-              <div class="op-name"><span>{{ OpTypeName[opItem.type as never] }}</span></div>
+            <div class="item" v-if="opItem.optype === OpType.MOVE || opItem.optype === OpType.MOVERELATE">
+              <div class="op-name"><span>{{ OpTypeName[opItem.optype as never] }}</span></div>
               <div class="op-section">
                 <span>X坐标:</span>
                 <input v-model.number="opItem.position.x" type="text" placeholder="X">
@@ -93,16 +103,16 @@ function addType(e: Event) {
                 <input v-model.number="opItem.count" type="text" placeholder="次数">
               </div>
             </div>
-            <div class="item" v-else-if="opItem.type === OpType.CLICKLEFT || opItem.type === OpType.CLICKRIGHT">
-              <div class="op-name"><span>{{ OpTypeName[opItem.type as never] }}</span></div>
+            <div class="item" v-else-if="opItem.optype === OpType.CLICKLEFT || opItem.optype === OpType.CLICKRIGHT">
+              <div class="op-name"><span>{{ OpTypeName[opItem.optype as never] }}</span></div>
               <div class="op-section">
                 <span>次数</span>
                 <input v-model.number="opItem.count" type="text" placeholder="次数">
               </div>
             </div>
             <div class="item"
-              v-else-if="opItem.type === OpType.KEYDOWN || opItem.type === OpType.KEYCLICK || opItem.type === OpType.KEYUP || opItem.type === OpType.KEYINPUT">
-              <div class="op-name"><span>{{ OpTypeName[opItem.type as never] }}</span></div>
+              v-else-if="opItem.optype === OpType.KEYDOWN || opItem.optype === OpType.KEYCLICK || opItem.optype === OpType.KEYUP || opItem.optype === OpType.KEYINPUT">
+              <div class="op-name"><span>{{ OpTypeName[opItem.optype as never] }}</span></div>
               <div class="op-section">
                 <span>字符</span>
                 <input v-model.number="opItem.word" type="text" placeholder="字符">
@@ -110,8 +120,8 @@ function addType(e: Event) {
                 <input v-model.number="opItem.count" type="text" placeholder="次数">
               </div>
             </div>
-            <div class="item" v-else-if="opItem.type === OpType.DELAY">
-              <div class=" op-name"><span>{{ OpTypeName[opItem.type as never] }}</span></div>
+            <div class="item" v-else-if="opItem.optype === OpType.DELAY">
+              <div class=" op-name"><span>{{ OpTypeName[opItem.optype as never] }}</span></div>
               <div class="op-section">
                 <span>毫秒数:</span>
                 <input v-model.number="opItem.time" type="text" placeholder="毫秒数">
